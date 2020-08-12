@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    window.onload = function () {
+
+
+        //要进行拷贝的数组
+        var arr = ["Tom", "Jerry", "Saidy", "Bob"]
+
+        //要进行拷贝的对象
+        var obj = {
+            name: "Tom",
+            age: 15,
+            hobbies: {
+                select1: "football",
+                select2: "pingpang",
+                select3: "reading"
+            }
+        }
+
+        //此方法用来判断传入进来的数据的类型
+        function getType(target) {
+
+            //.slice去取出[Object Object]后面的一个字段,是我们所需要的
+            return Object.prototype.toString.call(target).slice(8, -1)
+            /**
+             * Object下的tostring方法与Array下面的tostring方法的返回值不一样,
+             * Array重写了自己的tostring方法,返回的是数组的值,
+             * 而Object返回的是类型,在此利用此方法去判断输入的类型
+            */
+        }
+
+        function deepCopy(target) {
+            let result
+            if (getType(target) === 'Object') {
+                result = {}
+            } else if (getType(target) === 'Array') {
+                result = []
+            } else {
+                return target  //最后需要将结果返回,这里返回的是基本数据类型,要是其他的,则进行二次处理
+            }
+            for (const key in target) {
+                /**
+                 * for in (key)在数组中是下标 , 在对象中是key,
+                 * 如果是对象,在对象中还存在引用数据类型,则进行嵌套调用,直到没有引用数据类型
+                 * 在基本数据类型处理时 , 直接赋值即可
+                */
+                if (getType(target[key]) === 'Object' || getType(target[key]) === 'Array') {
+                    result[key] = deepCopy(target[key])
+                    // console.log("我进来了");
+                } else {
+                    result[key] = target[key]
+                }
+            }
+            return result  //返回最后处理后的结果
+        }
+
+        let arr1 = deepCopy(arr)
+        console.log("修改前:arr arr1", arr, arr1);
+        arr1[1] = "John"
+        console.log("修改后(arr1) arr arr1", arr, arr1);
+        console.log("----------------");
+
+
+        let obj1 = deepCopy(obj)
+        // console.log("修改前:obj obj1", obj, obj1);
+        obj1.hobbies.select1 = "足球"
+        console.log("修改后(obj1) obj obj1", obj, obj1);
+
+    }
+</script>
+
+<body>
+
+</body>
+
+</html>
