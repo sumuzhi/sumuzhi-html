@@ -22,6 +22,7 @@ window.onload = function () {
         window.MapSnake = MapSnake
 
     })();
+
     (function () {
         function Food(width, height, bgColor) {
             this.width = width
@@ -33,6 +34,7 @@ window.onload = function () {
         Food.prototype.init = function () {
             let mapDiv = document.getElementById('map-div')
             let foodDiv = document.createElement('div')
+            mapDiv.appendChild(foodDiv)
             foodDiv.style.height = this.height + "px"
             foodDiv.style.width = this.width + "px"
             foodDiv.style.backgroundColor = this.bgColor
@@ -41,15 +43,72 @@ window.onload = function () {
             this.x = parseInt(Math.random() * (mapDiv.offsetWidth / this.width))
             foodDiv.style.top = this.y * this.height + "px"
             foodDiv.style.left = this.x * this.width + "px"
-            mapDiv.appendChild(foodDiv)
             foodDiv.id = 'food-div'
         }
         window.Food = Food
-    })()
+    })();
+
+    (function () {
+        function Snake(width, height, dir) {
+            this.width = width
+            this.height = height
+            this.SnakePart = [{
+                x: 3,
+                y: 2,
+                bgColor: '#DC7159'
+            }, {
+                x: 2,
+                y: 2,
+                bgColor: 'orange'
+            }, {
+                x: 1,
+                y: 2,
+                bgColor: 'orange'
+            }]
+        }
+        Snake.prototype.init = function () {
+            Snake.remove();
+            let mapDiv = document.getElementById('map-div')
+            for (let i = 0; i < this.SnakePart.length; i++) {
+                let SnakeDiv = document.createElement('div')
+                SnakeDiv.style.width = this.width + "px"
+                SnakeDiv.style.height = this.height + "px"
+                SnakeDiv.style.position = 'absolute'
+                SnakeDiv.style.backgroundColor = this.SnakePart[i].bgColor
+                SnakeDiv.style.left = this.SnakePart[i].x * this.height + "px"
+                SnakeDiv.style.top = this.SnakePart[i].y * this.width + "px"
+                mapDiv.appendChild(SnakeDiv)
+            }
+
+        }
+
+        Snake.prototype.move = function () {
+            Snake.remove();
+            for (let i = this.SnakePart.length - 1; i > 0; i--) {
+                this.SnakePart[i].x = this.SnakePart[i - 1].x
+                this.SnakePart[i].y = this.SnakePart[i - 1].y
+            }
+            this.SnakePart[0].x += 1;
+            console.log(this.SnakePart);
+        }
+        Snake.remove = function () {
+            for (const key in this.SnakePart) {
+                const element = this.SnakePart[key];
+                console.log(element);
+            }
+        }
+
+        window.Snake = Snake
+    })();
 
     var mapsnake = new MapSnake(800, 600, '#ccc')
     mapsnake.init()
-    
+
     var food = new Food(20, 20, 'green')
     food.init()
+
+    var snake = new Snake(20, 20)
+    snake.init()
+    snake.move()
+    snake.init()
 }
