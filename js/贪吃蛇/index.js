@@ -49,7 +49,7 @@ window.onload = function () {
     })();
 
     (function () {
-        var elements = []
+        var elements = [] //新建一个数组用来存储旧蛇的div部分,在删除方法中使用
 
         function Snake(width, height, dir) {
             this.width = width
@@ -80,11 +80,13 @@ window.onload = function () {
                 SnakeDiv.style.left = this.SnakePart[i].x * this.height + "px"
                 SnakeDiv.style.top = this.SnakePart[i].y * this.width + "px"
                 mapDiv.appendChild(SnakeDiv)
-                elements.push(SnakeDiv)
+                elements.push(SnakeDiv) //将蛇的部分添加到数组中,利用数组的方法进行和删除旧元素操作
             }
 
         }
-
+        /**
+         * 初始化使蛇向右移动
+         */
         Snake.prototype.move = function () {
             for (let i = this.SnakePart.length - 1; i > 0; i--) {
                 this.SnakePart[i].x = this.SnakePart[i - 1].x
@@ -93,6 +95,9 @@ window.onload = function () {
             this.SnakePart[0].x += 1;
         }
 
+        /**
+         * 在蛇初始化生成长度时,先进行数组的排空,目的是删除旧蛇,生成新蛇
+         */
         Snake.remove = function () {
             let mapDiv = document.getElementById('map-div')
             for (let i = 0; i < elements.length; i++) {
