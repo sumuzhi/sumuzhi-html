@@ -49,6 +49,8 @@ window.onload = function () {
     })();
 
     (function () {
+        var elements = []
+
         function Snake(width, height, dir) {
             this.width = width
             this.height = height
@@ -78,24 +80,25 @@ window.onload = function () {
                 SnakeDiv.style.left = this.SnakePart[i].x * this.height + "px"
                 SnakeDiv.style.top = this.SnakePart[i].y * this.width + "px"
                 mapDiv.appendChild(SnakeDiv)
+                elements.push(SnakeDiv)
             }
 
         }
 
         Snake.prototype.move = function () {
-            Snake.remove();
             for (let i = this.SnakePart.length - 1; i > 0; i--) {
                 this.SnakePart[i].x = this.SnakePart[i - 1].x
                 this.SnakePart[i].y = this.SnakePart[i - 1].y
             }
             this.SnakePart[0].x += 1;
-            console.log(this.SnakePart);
         }
+
         Snake.remove = function () {
-            for (const key in this.SnakePart) {
-                const element = this.SnakePart[key];
-                console.log(element);
+            let mapDiv = document.getElementById('map-div')
+            for (let i = 0; i < elements.length; i++) {
+                mapDiv.removeChild(elements[i])
             }
+            elements.splice(0)
         }
 
         window.Snake = Snake
@@ -108,7 +111,8 @@ window.onload = function () {
     food.init()
 
     var snake = new Snake(20, 20)
-    snake.init()
-    snake.move()
-    snake.init()
+    setInterval(function () {
+        snake.init();
+        snake.move();
+    }, 100)
 }
