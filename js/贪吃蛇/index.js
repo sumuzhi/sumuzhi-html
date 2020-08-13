@@ -40,7 +40,7 @@ window.onload = function () {
         }
         //食物的初始化操作
         Food.prototype.init = function () {
-            this.remove();
+            remove();
             let mapDiv = document.getElementById('map-div')
             let foodDiv = document.createElement('div')
             foodDiv.style.height = this.height + "px"
@@ -56,17 +56,21 @@ window.onload = function () {
             element.push(foodDiv)
         }
 
-        Food.prototype.remove = function () {
+        function remove() {
             let mapDiv = document.getElementById('map-div')
             for (let i = 0; i < element.length; i++) {
-                mapDiv.removeChild(foodDiv[i])
+                mapDiv.removeChild(element[i])
             }
-            element.slice(0)
+            element.splice(0)
         }
+
 
         window.Food = Food //将食物属性设置为windo的属性,便于外部使用
     })();
 
+    /**
+     * 蛇的相关设置
+     */
     (function () {
         var elements = [] //新建一个数组用来存储旧蛇的div部分,在删除方法中使用
 
@@ -92,12 +96,17 @@ window.onload = function () {
             Snake.remove();
             let mapDiv = document.getElementById('map-div')
             for (let i = 0; i < this.SnakePart.length; i++) {
+                /**
+                 * 这里当蛇吃掉食物后,存储蛇对象的数组的长度发生了变化,
+                 * 自动重新修改蛇的长度,也就不需要重新给新添加元素进行属性的设置
+                 * 新添加的元素在尾部
+                 */
                 let SnakeDiv = document.createElement('div')
                 SnakeDiv.style.width = this.width + "px"
                 SnakeDiv.style.height = this.height + "px"
                 SnakeDiv.style.position = 'absolute'
-                SnakeDiv.style.backgroundColor = this.SnakePart[i].bgColor
-                SnakeDiv.style.left = this.SnakePart[i].x * this.height + "px"
+                SnakeDiv.style.backgroundColor = this.SnakePart[i].bgColor //设置蛇的颜色
+                SnakeDiv.style.left = this.SnakePart[i].x * this.height + "px" //设置蛇的左偏移量
                 SnakeDiv.style.top = this.SnakePart[i].y * this.width + "px"
                 mapDiv.appendChild(SnakeDiv)
                 elements.push(SnakeDiv) //将蛇的部分添加到数组中,利用数组的方法进行和删除旧元素操作
@@ -172,13 +181,25 @@ window.onload = function () {
             var timer = setInterval(function () {
                 that.snake.move();
                 that.snake.init();
+                //判断蛇的位置,游戏结束条件
                 if (that.snake.SnakePart[0].x < 0 || that.snake.SnakePart[0].x > that.mapsnake.width / that.snake.width - 1 || that.snake.SnakePart[0].y < 0 || that.snake.SnakePart[0].y > that.mapsnake.height / that.snake.height - 1) {
                     clearInterval(timer)
-                    console.log(111);
+                }
+
+                //判断食物是否被蛇吃掉
+                if (that.food.x == that.snake.SnakePart[0].x && that.food.y == that.snake.SnakePart[0].y) {
+                    that.food.init()
+                    let obj = {
+                        bgColor: 'orange'
+                    }
+                    /**
+                     * 当蛇吃掉食物后,添加新的一个对象到蛇原本的数组中,他会自动重新遍历去修改蛇对象的长度,
+                     * 以至于重新修改尾巴的长度和其他属性
+                     * 这里不需要设置x y 是因为他和
+                     */
+                    that.snake.SnakePart.push(obj)
                 }
             }, 100)
-
-            //判断蛇的位置,游戏结束条件
 
         }
 
@@ -191,7 +212,6 @@ window.onload = function () {
                     that.snake.dir = 'top'
                     break;
                 case 39:
-                    console.log(that);
                     that.snake.dir = 'right'
                     break;
                 case 40:
