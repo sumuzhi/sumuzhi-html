@@ -9,6 +9,8 @@ window.onload = function () {
             this.height = height
             this.bgColor = bgColor
         }
+
+        //地图的初始化操作
         MapSnake.prototype.init = function () {
             let divs = document.createElement('div')
             divs.style.width = this.width + "px"
@@ -16,7 +18,7 @@ window.onload = function () {
             divs.style.backgroundColor = this.bgColor
             divs.style.position = 'relative'
             divs.id = 'map-div'
-            document.body.appendChild(divs)
+            document.body.appendChild(divs) //将map添加到body中
         }
         //利用window的全局性去添加一个方法到window上,以便外部可以调用此方法
         window.MapSnake = MapSnake
@@ -31,6 +33,7 @@ window.onload = function () {
             this.x = 0
             this.y = 0
         }
+        //食物的初始化操作
         Food.prototype.init = function () {
             let mapDiv = document.getElementById('map-div')
             let foodDiv = document.createElement('div')
@@ -45,7 +48,7 @@ window.onload = function () {
             foodDiv.style.left = this.x * this.width + "px"
             foodDiv.id = 'food-div'
         }
-        window.Food = Food
+        window.Food = Food //将食物属性设置为windo的属性,便于外部使用
     })();
 
     (function () {
