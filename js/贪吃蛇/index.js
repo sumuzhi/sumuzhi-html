@@ -204,6 +204,7 @@ window.onload = function () {
         }
 
         document.onkeydown = function (e) {
+
             switch (e.keyCode) {
                 case 37:
                     that.snake.dir = 'left'
