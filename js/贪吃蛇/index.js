@@ -205,17 +205,29 @@ window.onload = function () {
 
         document.onkeydown = function (e) {
 
+            /**
+             * 不允许自己反方向运行,可以拿到当前方向,(当前方向是由上一次的点击所改变的)
+             * 拿到后进行判断,是否与当前方向相反,是的话则不给予考虑,直接跳出
+             */
             switch (e.keyCode) {
                 case 37:
+                    if (that.snake.dir == 'right')
+                        break
                     that.snake.dir = 'left'
                     break;
                 case 38:
+                    if (that.snake.dir == 'bottom')
+                        break
                     that.snake.dir = 'top'
                     break;
                 case 39:
+                    if (that.snake.dir == 'left')
+                        break
                     that.snake.dir = 'right'
                     break;
                 case 40:
+                    if (that.snake.dir == 'top')
+                        break
                     that.snake.dir = 'bottom'
                     break;
                 default:
