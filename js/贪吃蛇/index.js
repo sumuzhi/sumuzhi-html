@@ -25,7 +25,12 @@ window.onload = function () {
 
     })();
 
+    /**
+     * 食物相关函数
+     */
     (function () {
+        var element = [];
+
         function Food(width, height, bgColor) {
             this.width = width
             this.height = height
@@ -35,9 +40,9 @@ window.onload = function () {
         }
         //食物的初始化操作
         Food.prototype.init = function () {
+            this.remove();
             let mapDiv = document.getElementById('map-div')
             let foodDiv = document.createElement('div')
-            mapDiv.appendChild(foodDiv)
             foodDiv.style.height = this.height + "px"
             foodDiv.style.width = this.width + "px"
             foodDiv.style.backgroundColor = this.bgColor
@@ -47,7 +52,18 @@ window.onload = function () {
             foodDiv.style.top = this.y * this.height + "px"
             foodDiv.style.left = this.x * this.width + "px"
             foodDiv.id = 'food-div'
+            mapDiv.appendChild(foodDiv)
+            element.push(foodDiv)
         }
+
+        Food.prototype.remove = function () {
+            let mapDiv = document.getElementById('map-div')
+            for (let i = 0; i < element.length; i++) {
+                mapDiv.removeChild(foodDiv[i])
+            }
+            element.slice(0)
+        }
+
         window.Food = Food //将食物属性设置为windo的属性,便于外部使用
     })();
 
@@ -57,6 +73,7 @@ window.onload = function () {
         function Snake(width, height, dir) {
             this.width = width
             this.height = height
+            this.dir = dir
             this.SnakePart = [{
                 x: 3,
                 y: 2,
@@ -95,7 +112,23 @@ window.onload = function () {
                 this.SnakePart[i].x = this.SnakePart[i - 1].x
                 this.SnakePart[i].y = this.SnakePart[i - 1].y
             }
-            this.SnakePart[0].x += 1;
+            switch (this.dir) {
+                case 'left':
+                    this.SnakePart[0].x -= 1;
+                    break;
+                case 'top':
+                    this.SnakePart[0].y -= 1;
+                    break;
+                case 'right':
+                    this.SnakePart[0].x += 1;
+                    break;
+                case 'bottom':
+                    this.SnakePart[0].y += 1;
+                    break;
+                default:
+                    this.SnakePart[0].x += 1;
+                    break;
+            }
         }
 
         /**
@@ -104,9 +137,9 @@ window.onload = function () {
         Snake.remove = function () {
             let mapDiv = document.getElementById('map-div')
             for (let i = 0; i < elements.length; i++) {
-                mapDiv.removeChild(elements[i])
+                mapDiv.removeChild(elements[i]) //将在Map中的 存在于elements中的元素移除,但是元素还是存在与数组中
             }
-            elements.splice(0)
+            elements.splice(0) //将数组里面的元素清空
         }
 
         window.Snake = Snake
@@ -116,6 +149,8 @@ window.onload = function () {
      * 封装Game构造函数,用于游戏的管理,食物的出现,蛇的运动,游戏规则
      */
     (function () {
+        var that;
+
         function Game() {
             //将地图 食物 蛇的初始话设置设置成game的属性
             this.mapsnake = new MapSnake(800, 600, '#ccc')
@@ -125,6 +160,7 @@ window.onload = function () {
         }
         //调用Game属性的各个init方法
         Game.prototype.init = function () {
+            that = this
             this.mapsnake.init()
             this.food.init()
             this.snake.init()
@@ -133,13 +169,39 @@ window.onload = function () {
 
         //游戏的规则
         Game.prototype.rule = function () {
-            let that = this
-            setInterval(function () {
+            var timer = setInterval(function () {
                 that.snake.move();
                 that.snake.init();
+                if (that.snake.SnakePart[0].x < 0 || that.snake.SnakePart[0].x > that.mapsnake.width / that.snake.width - 1 || that.snake.SnakePart[0].y < 0 || that.snake.SnakePart[0].y > that.mapsnake.height / that.snake.height - 1) {
+                    clearInterval(timer)
+                    console.log(111);
+                }
             }, 100)
 
+            //判断蛇的位置,游戏结束条件
+
         }
+
+        document.onkeydown = function (e) {
+            switch (e.keyCode) {
+                case 37:
+                    that.snake.dir = 'left'
+                    break;
+                case 38:
+                    that.snake.dir = 'top'
+                    break;
+                case 39:
+                    console.log(that);
+                    that.snake.dir = 'right'
+                    break;
+                case 40:
+                    that.snake.dir = 'bottom'
+                    break;
+                default:
+                    break;
+            }
+        }
+
         window.Game = Game
     })();
 
