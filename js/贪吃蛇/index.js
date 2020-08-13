@@ -112,15 +112,39 @@ window.onload = function () {
         window.Snake = Snake
     })();
 
-    var mapsnake = new MapSnake(800, 600, '#ccc')
-    mapsnake.init()
+    /**
+     * 封装Game构造函数,用于游戏的管理,食物的出现,蛇的运动,游戏规则
+     */
+    (function () {
+        function Game() {
+            //将地图 食物 蛇的初始话设置设置成game的属性
+            this.mapsnake = new MapSnake(800, 600, '#ccc')
+            this.food = new Food(20, 20, 'green')
+            this.snake = new Snake(20, 20)
 
-    var food = new Food(20, 20, 'green')
-    food.init()
+        }
+        //调用Game属性的各个init方法
+        Game.prototype.init = function () {
+            this.mapsnake.init()
+            this.food.init()
+            this.snake.init()
 
-    var snake = new Snake(20, 20)
-    setInterval(function () {
-        snake.init();
-        snake.move();
-    }, 100)
+        }
+
+        //游戏的规则
+        Game.prototype.rule = function () {
+            let that = this
+            setInterval(function () {
+                that.snake.move();
+                that.snake.init();
+            }, 100)
+
+        }
+        window.Game = Game
+    })();
+
+    var game = new Game();
+    game.init()
+    game.rule()
+
 }
