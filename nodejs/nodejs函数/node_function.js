@@ -1,1 +1,2 @@
-console.log(111);
+console.log(arguments.callee.toString());
+console.log(1);
