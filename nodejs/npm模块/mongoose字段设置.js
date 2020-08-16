@@ -67,11 +67,11 @@ let myPromise = new Promise((resolve, reject) => {
     //模型中有所有操控数据库的方法
 
     student_Schema.create({
-        stu_id: '10001',
-        name: 'Tom',
-        age: 18,
-        hobbies: ['吃饭', '睡觉'],
-        info: '干啥啥不行'
+        stu_id: '10005',
+        name: 'Jerry',
+        age: 17,
+        hobbies: ['篮球', '睡觉'],
+        info: '吃饭'
     }, (err, data) => {
         if (!err) {
             console.log("数据写入成功", data);
