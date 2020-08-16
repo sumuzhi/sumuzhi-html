@@ -19,8 +19,9 @@ let myPromise = new Promise((resolve, reject) => {
         }
     })
 });
-(async () => {
 
+
+(async () => {
 
     await myPromise
 
@@ -43,8 +44,18 @@ let myPromise = new Promise((resolve, reject) => {
             required: true
         },
         date: {
-            type: Date,
-            default: Date.now()
+            type: String,
+            default: datetime = () => {
+                var date = new Date();
+                var arr = [date.getFullYear(), (date.getMonth() + 1).toString(), (date.getDate()).toString(), (date.getHours()).toString(), (date.getMinutes()).toString(), (date.getSeconds()).toString()];
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i].length == 1) {
+                        arr[i] = "0" + arr[i];
+                    }
+                }
+                dateTime = arr[0] + "-" + arr[1] + "-" + arr[2] + " " + arr[3] + ":" + arr[4] + ":" + arr[5];
+                return dateTime;
+            }
         },
         hobbies: [String], //数组
         info: Schema.Types.Mixed //接受所有的数据类型
@@ -56,7 +67,7 @@ let myPromise = new Promise((resolve, reject) => {
     //模型中有所有操控数据库的方法
 
     student_Schema.create({
-        stu_id: '123458',
+        stu_id: '10001',
         name: 'Tom',
         age: 18,
         hobbies: ['吃饭', '睡觉'],
@@ -67,6 +78,6 @@ let myPromise = new Promise((resolve, reject) => {
         } else {
             console.log(err);
         }
-    })
+    });
 
 })()
