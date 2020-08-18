@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button>点击跨域</button>
+    /*
+    利用script标签的自动使用get方法可以解决一部分跨域问题
+    */
+    <script>
+        let btn = document.querySelector('button')
+        btn.onclick = function () {
+            let scriptNode = document.createElement('script')
+            scriptNode.src = 'http://localhost:3000/demo'
+            document.body.appendChild(scriptNode)
+        }
+
+    </script>
+</body>
+
+</html>
