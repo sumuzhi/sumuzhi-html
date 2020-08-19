@@ -1,4 +1,4 @@
-const collection = 'cities'
+const collection = 'cities' //数据库名称
 //引入mongoose
 let mongoose = require('mongoose')
 

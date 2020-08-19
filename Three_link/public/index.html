@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="box1">
+        <select id="province">
+            <option value="">请选择省份</option>
+        </select>&nbsp;省&nbsp;
+
+        <select id="city">
+            <option value="">请选择市</option>
+        </select>&nbsp;市&nbsp;
+
+        <select id="county">
+            <option value="">请选择区/县</option>
+        </select>&nbsp;区/县&nbsp;
+    </div>
+
+    <script>
+        $(function () {
+            let $province = $('#province')  //省
+            let $city = $('#city')      //市
+            let $county = $('#county') //区/县
+
+            /**
+             * 当页面打开时,显示省级下拉框,在省级选择完成后,监听省级下拉框的改变,进行获取市级数据
+             * 在市级获取完成后,通过类似的方法去获取到县/区的数据
+             * 在省级或市级菜单选择为空时,不进行数据的请求
+            */
+            $.get("http://localhost:3000/getAllProvince", (result) => {
+                let { state, data } = result
+                if (state === 1) {
+                    let html = ''
+                    data.forEach(item => {
+                        html += `<option value="${item.province}">${item.name}</option>`
+                    });
+                    $province.append(html)
+                } else {
+                    console.log(result.err);
+                }
+
+
+                //选择市
+                $province.change(function () {
+                    $city.html('<option value="">请选择市</option>')
+                    $county.html('<option value="">请选择区/县</option>')
+                    let province = $province.val()
+                    if (!province) {
+                        return
+                    }
+                    $.get("http://localhost:3000/getAllcityByprovince?", { province }, (result) => {
+                        let { state, data } = result
+                        if (state === 1) {
+                            let html = ''
+                            data.forEach(item => {
+                                html += `<option value="${item.city}">${item.name}</option>`
+                            });
+                            $city.append(html)
+                            /**
+                             * 利用变量暂存数据,在数据添加完成后统一将数据追加到document节点中
+                            */
+                        } else {
+                            console.log(result.err);
+                        }
+                    })
+                })
+
+                //选择区/县
+                $city.change(function () {
+                    $county.html('<option value="">请选择区/县</option>')
+                    let province = $province.val()
+                    let city = $city.val()
+                    if (!province || !city) {
+                        return
+                    }
+                    $.get("http://localhost:3000/getAllcityByprovinceAndCity?", { province, city }, (result) => {
+                        let { state, data } = result
+                        if (state === 1) {
+                            let html = ''
+                            data.forEach(item => {
+                                html += `<option value="${item.$county}">${item.name}</option>`
+                            });
+                            $county.append(html)
+                        } else {
+                            console.log(result.err);
+                        }
+                    })
+                })
+
+            })
+
+
+        })
+    </script>
+</body>
+
+</html>
