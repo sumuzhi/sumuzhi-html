@@ -31,7 +31,7 @@
         class Weather extends React.Component {
 
             constructor() {
-                super()
+                super()   //添加构造器时,必须用super去继承父类的方法及属性
                 this.state = { isHot: true }
                 this.stateHandler = this.stateHandler.bind(this)
             }
