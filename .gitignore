@@ -1,6 +1,7 @@
 .vscode
 .idea
 node_modules
+react
 *.mp3
 *.mp4
 package-lock.json
